@@ -1,33 +1,41 @@
 
 from PIL import Image
-im = Image.open("testImg.jpg")
-print(im.format, im.size, im.mode)
-im.show()
-
 from PIL import ImageFilter
-filters = [ImageFilter.EMBOSS, ImageFilter.SMOOTH_MORE, ImageFilter.FIND_EDGES, ImageFilter.EDGE_ENHANCE]
-imf = im
+from os import listdir
 
-for f in filters:
-    imf = imf.filter(f)
+def cropIm(im):
+    print(im.format, im.size, im.mode)
+    # im.show()
 
-imf.show()
+    filters = [ImageFilter.EMBOSS, ImageFilter.SMOOTH_MORE, ImageFilter.FIND_EDGES, ImageFilter.EDGE_ENHANCE]
+    imf = im
 
-px = imf.load()
+    for f in filters:
+        imf = imf.filter(f)
 
-def getPx(i, offset, vert):
-    if (vert):
-        return px[offset, i]
-    else:
-        return px[i, offset]
+    # imf.show()
 
-def findEdge(upperBounds, offset, vert):
-    for i in range(upperBounds - 1, 0, -1):
-        if (getPx(i, offset, vert) == (255, 255, 255)):
-            return i
+    px = imf.load()
 
-x = findEdge(imf.width, 100, False)
-y = findEdge(imf.height, 100, True)
+    def getPx(i, offset, vert):
+        if (vert):
+            return px[offset, i]
+        else:
+            return px[i, offset]
 
-imc = im.crop((0,0,x,y))
-imc.show()
+    def findEdge(upperBounds, offset, vert):
+        for i in range(upperBounds - 1, 0, -1):
+            if (getPx(i, offset, vert) == (255, 255, 255)):
+                return i
+
+    x = findEdge(imf.width, 100, False)
+    y = findEdge(imf.height, 100, True)
+
+    imc = im.crop((0,0,x,y))
+    imc.show()
+
+paths = listdir("testImages")
+
+for pth in paths:
+    im = Image.open("testImages/" + pth)
+    cropIm(im)
