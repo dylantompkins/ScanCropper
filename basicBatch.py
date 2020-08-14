@@ -7,7 +7,7 @@ def cropIm(im):
     print(im.format, im.size, im.mode)
     # im.show()
 
-    filters = [ImageFilter.EMBOSS, ImageFilter.SMOOTH_MORE, ImageFilter.FIND_EDGES, ImageFilter.EDGE_ENHANCE]
+    filters = [ImageFilter.SHARPEN, ImageFilter.EDGE_ENHANCE_MORE, ImageFilter.FIND_EDGES]
     imf = im
 
     for f in filters:
@@ -28,8 +28,8 @@ def cropIm(im):
             if (getPx(i, offset, vert) == (255, 255, 255)):
                 return i
 
-    x = findEdge(imf.width, 100, False)
     y = findEdge(imf.height, 100, True)
+    x = findEdge(imf.width, y, False)
 
     imc = im.crop((0,0,x,y))
     imc.show()
